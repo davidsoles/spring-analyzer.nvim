@@ -7,15 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
-### Changed
-
-- Recommended keymaps moved from `<leader>s` to LazyVim's `<leader>c`
-  (`code`) group: `<leader>ce`, `<leader>cE`, `<leader>cH`.
-
 ### Planned
 
-- Event publisher/subscriber picker
-- Relationship graph
+- Scheduled task extraction
 - Per-file incremental cache updates
 
 ## [1.3.0] - 2026-11-04
@@ -27,6 +21,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   checksum, and rescans.
 - `scanner.update_check = "notify" | "auto" | false`.
 - `scanner.update_check_ttl` configuration.
+
+### Changed
+
+- Recommended keymaps moved from `<leader>s` to LazyVim's `<leader>c`
+  (`code`) group: `<leader>ce`, `<leader>cE`, `<leader>cH`.
 
 ### Notes
 
