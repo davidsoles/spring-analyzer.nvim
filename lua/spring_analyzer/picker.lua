@@ -132,11 +132,35 @@ end
 ---@return table
 local function publisher_item(root, event, publisher)
   if not publisher then
+    local origin = event.publisherOrigin or "none"
+    local label
+    local kind
+    local preview
+
+    if origin == "framework" then
+      label = "Spring Boot lifecycle"
+      kind = "publisher"
+      preview = "Published by the Spring Boot lifecycle"
+    elseif origin == "external" then
+      label = "external publisher (outside repository)"
+      kind = "publisher"
+      preview = "Published outside this repository"
+    else
+      label = "(no publisher found)"
+      kind = "empty"
+      preview = "No publisher found for " .. (event.eventSimpleName or "event")
+    end
+
     return {
-      kind = "empty",
-      label = "(no publisher found)",
-      text = (event.eventSimpleName or "") .. " no publisher",
-      preview = { text = "No publisher found for " .. (event.eventSimpleName or "event") },
+      kind = kind,
+      origin = origin,
+      label = label,
+      text = table.concat({
+        event.eventSimpleName or "",
+        label,
+        origin,
+      }, " "),
+      preview = { text = preview },
     }
   end
 
@@ -258,7 +282,16 @@ local function event_format(item, picker, snacks)
       "Comment",
     })
   elseif item.kind == "publisher" then
-    table.insert(highlights, { "PUB  ", "DiagnosticInfo" })
+    local prefix = "PUB  "
+    local highlight = "DiagnosticInfo"
+    if item.origin == "framework" then
+      prefix = "BOOT "
+      highlight = "Special"
+    elseif item.origin == "external" then
+      prefix = "EXT  "
+      highlight = "Comment"
+    end
+    table.insert(highlights, { prefix, highlight })
     table.insert(highlights, { item.label, "Function" })
     if item.publisher and item.publisher.expression and item.publisher.expression ~= "" then
       table.insert(highlights, { "  " .. item.publisher.expression, "Comment" })

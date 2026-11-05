@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 - Recommended keymaps: `<leader>ce` endpoints, `<leader>cE` events,
   `<leader>c<C-r>` refresh, `<leader>ci` diagnostics.
+- Event tree labels Spring Boot lifecycle events as `Spring Boot lifecycle`
+  instead of `(no publisher found)`, and distinguishes external publishers.
 
 ### Planned
 

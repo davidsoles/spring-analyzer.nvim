@@ -289,6 +289,22 @@ OrderCreatedEvent
 Events without a publisher or without subscribers are shown explicitly, so
 orphan listeners and unpublished events are easy to spot.
 
+Spring Boot lifecycle events are labeled instead of showing a misleading
+"no publisher found":
+
+```text
+ApplicationReadyEvent
+└─ BOOT Spring Boot lifecycle
+   └─ SUB WeatherScheduler#initWeatherUpdate
+```
+
+The underlying JSON field is `publisherOrigin`:
+
+- `application`: publisher found in the repository.
+- `framework`: Spring Boot/Spring lifecycle event.
+- `external`: publisher outside the repository.
+- `none`: event declared in the repository but never published.
+
 ## Picker
 
 The endpoint picker shows one row per endpoint. The event picker shows a tree of
