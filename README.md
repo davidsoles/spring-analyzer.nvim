@@ -57,7 +57,7 @@ return {
     dependencies = { "folke/snacks.nvim" },
     opts = {
       scanner = {
-        version = "1.1.0",
+        version = "1.2.0",
         auto_download = true,
       },
       auto = {
@@ -88,7 +88,7 @@ Use a directory spec while developing both projects:
   opts = {
     scanner = {
       -- Local JAR wins over auto-download.
-      jar = "/home/dsoles/Java/spring-analyzer/target/spring-analyzer-1.1.0.jar",
+      jar = "/home/dsoles/Java/spring-analyzer/target/spring-analyzer-1.2.0.jar",
     },
     auto = { on_save = false, on_open = false },
   },
@@ -185,7 +185,7 @@ require("spring_analyzer").setup({
   scanner = {
     java = nil,        -- defaults to exepath("java") or "java"
     jar = nil,         -- explicit JAR; wins over auto-download
-    version = "1.1.0", -- scanner release to download
+    version = "1.2.0", -- scanner release to download
     auto_download = true,
     update_check = "notify", -- false | "notify" | "auto"
     update_check_ttl = 86400,
@@ -347,7 +347,7 @@ Or set `scanner.jar` to a local build:
 
 ```lua
 scanner = {
-  jar = "/home/dsoles/Java/spring-analyzer/target/spring-analyzer-1.1.0.jar",
+  jar = "/home/dsoles/Java/spring-analyzer/target/spring-analyzer-1.2.0.jar",
 }
 ```
 

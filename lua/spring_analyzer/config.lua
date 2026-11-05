@@ -37,7 +37,7 @@ M.defaults = {
   scanner = {
     java = nil,
     jar = nil,
-    version = "1.1.0",
+    version = "1.2.0",
     auto_download = true,
     update_check = "notify",
     update_check_ttl = 86400,
@@ -85,7 +85,7 @@ function M.setup(opts)
     cfg.cache.dir = vim.fs.normalize(vim.fn.fnamemodify(vim.fn.expand(cfg.cache.dir), ":p"))
   end
 
-  cfg.scanner.version = tostring(cfg.scanner.version or "1.0.0")
+  cfg.scanner.version = tostring(cfg.scanner.version or "1.2.0")
   if cfg.scanner.update_check == true then
     cfg.scanner.update_check = "notify"
   elseif cfg.scanner.update_check ~= false

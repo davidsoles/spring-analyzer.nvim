@@ -7,17 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
-### Changed
-
-- Recommended keymaps: `<leader>ce` endpoints, `<leader>cE` events,
-  `<leader>c<C-r>` refresh, `<leader>ci` diagnostics.
-- Event tree labels Spring Boot lifecycle events as `Spring Boot lifecycle`
-  instead of `(no publisher found)`, and distinguishes external publishers.
-
 ### Planned
 
 - Scheduled task extraction
 - Per-file incremental cache updates
+
+## [1.4.0] - 2026-11-05
+
+### Added
+
+- Event tree labels Spring Boot lifecycle events as `Spring Boot lifecycle`
+  instead of `(no publisher found)`.
+- External event publishers are labeled separately.
+- Default scanner version bumped to `1.2.0`.
+
+### Changed
+
+- Recommended keymaps: `<leader>ce` endpoints, `<leader>cE` events,
+  `<leader>c<C-r>` refresh, `<leader>ci` diagnostics.
+
+### Notes
+
+- Lifecycle/external labels require scanner 1.2.0 or newer.
 
 ## [1.3.0] - 2026-11-04
 
