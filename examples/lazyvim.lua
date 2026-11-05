@@ -10,9 +10,9 @@ return {
     ft = "java",
     cmd = { "SpringAnalyzer" },
     keys = {
-      { "<leader>sa", "<cmd>SpringAnalyzer<cr>", desc = "SpringAnalyzer: endpoints" },
-      { "<leader>sr", "<cmd>SpringAnalyzer refresh<cr>", desc = "SpringAnalyzer: refresh" },
-      { "<leader>sd", "<cmd>SpringAnalyzer doctor<cr>", desc = "SpringAnalyzer: diagnostics" },
+      { "<leader>ce", "<cmd>SpringAnalyzer<cr>", desc = "SpringAnalyzer: endpoints" },
+      { "<leader>cE", "<cmd>SpringAnalyzer refresh<cr>", desc = "SpringAnalyzer: refresh" },
+      { "<leader>cH", "<cmd>SpringAnalyzer doctor<cr>", desc = "SpringAnalyzer: diagnostics" },
     },
     dependencies = {
       "folke/snacks.nvim",

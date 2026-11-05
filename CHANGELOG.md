@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Changed
+
+- Recommended keymaps moved from `<leader>s` to LazyVim's `<leader>c`
+  (`code`) group: `<leader>ce`, `<leader>cE`, `<leader>cH`.
+
 ### Planned
 
 - Event publisher/subscriber picker
