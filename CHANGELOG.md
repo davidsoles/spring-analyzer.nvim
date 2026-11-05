@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Changed
+
+- Recommended keymaps: `<leader>ce` endpoints, `<leader>cE` events,
+  `<leader>c<C-r>` refresh, `<leader>cH` diagnostics.
+
 ### Planned
 
 - Scheduled task extraction

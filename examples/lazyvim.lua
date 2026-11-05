@@ -11,7 +11,8 @@ return {
     cmd = { "SpringAnalyzer" },
     keys = {
       { "<leader>ce", "<cmd>SpringAnalyzer<cr>", desc = "SpringAnalyzer: endpoints" },
-      { "<leader>cE", "<cmd>SpringAnalyzer refresh<cr>", desc = "SpringAnalyzer: refresh" },
+      { "<leader>cE", "<cmd>SpringAnalyzer events<cr>", desc = "SpringAnalyzer: events" },
+      { "<leader>c<C-r>", "<cmd>SpringAnalyzer refresh<cr>", desc = "SpringAnalyzer: refresh" },
       { "<leader>cH", "<cmd>SpringAnalyzer doctor<cr>", desc = "SpringAnalyzer: diagnostics" },
     },
     dependencies = {
