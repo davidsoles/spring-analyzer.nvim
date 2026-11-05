@@ -1,0 +1,5 @@
+bin/*.jar
+!bin/.gitkeep
+.DS_Store
+doc/tags
+*.log
