@@ -13,6 +13,7 @@ local function print_help()
       "SpringAnalyzer",
       "",
       ":SpringAnalyzer                 Open the endpoint picker",
+      ":SpringAnalyzer events          Show publishers and subscribers",
       ":SpringAnalyzer refresh         Clear cache and rescan",
       ":SpringAnalyzer clear           Clear the current project cache",
       ":SpringAnalyzer clear all       Clear all caches",
@@ -27,6 +28,12 @@ local function print_help()
 end
 
 local subcommands = {
+  events = {
+    desc = "Show publishers and subscribers",
+    run = function()
+      spring().show_events()
+    end,
+  },
   refresh = {
     desc = "Clear cache and rescan",
     run = function()

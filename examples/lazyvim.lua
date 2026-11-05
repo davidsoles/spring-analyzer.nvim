@@ -19,10 +19,10 @@ return {
     },
     opts = {
       scanner = {
-        version = "1.0.0",
+        version = "1.1.0",
         auto_download = true,
         -- Local development override. If set, no download is attempted.
-        -- jar = "/home/dsoles/Java/spring-analyzer/target/spring-analyzer-1.0.0.jar",
+        -- jar = "/home/dsoles/Java/spring-analyzer/target/spring-analyzer-1.1.0.jar",
         include_tests = false,
         include_mvc = false,
       },

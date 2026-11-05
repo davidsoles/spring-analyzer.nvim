@@ -17,6 +17,7 @@ application.
 - Per-project cache under `stdpath("cache")`.
 - Snacks picker with fuzzy matching by HTTP verb, path, handler, or file.
 - Opens the source file and places the cursor on the mapping annotation.
+- Event graph picker: publishers and their subscribers in a tree.
 - Automatic refresh after saving Java files, with debounce.
 - Background refresh when opening a Java file if the cache is stale.
 - Automatic scanner JAR download from GitHub Releases, with SHA-256
@@ -53,7 +54,7 @@ return {
     dependencies = { "folke/snacks.nvim" },
     opts = {
       scanner = {
-        version = "1.0.0",
+        version = "1.1.0",
         auto_download = true,
       },
       auto = {
@@ -84,7 +85,7 @@ Use a directory spec while developing both projects:
   opts = {
     scanner = {
       -- Local JAR wins over auto-download.
-      jar = "/home/dsoles/Java/spring-analyzer/target/spring-analyzer-1.0.0.jar",
+      jar = "/home/dsoles/Java/spring-analyzer/target/spring-analyzer-1.1.0.jar",
     },
     auto = { on_save = false, on_open = false },
   },
@@ -135,6 +136,7 @@ Diagnostics:
 | Command | Description |
 |---|---|
 | `:SpringAnalyzer` | Open the endpoint picker. |
+| `:SpringAnalyzer events` | Show the publisher -> subscriber tree. |
 | `:SpringAnalyzer refresh` | Clear the cache and rescan. |
 | `:SpringAnalyzer clear` | Clear the current project cache. |
 | `:SpringAnalyzer clear all` | Clear all SpringAnalyzer caches. |
@@ -153,7 +155,7 @@ require("spring_analyzer").setup({
   scanner = {
     java = nil,        -- defaults to exepath("java") or "java"
     jar = nil,         -- explicit JAR; wins over auto-download
-    version = "1.0.0", -- scanner release to download
+    version = "1.1.0", -- scanner release to download
     auto_download = true,
     download_url = "https://github.com/davidsoles/spring-analyzer/releases/download/v%s/spring-analyzer-%s.jar",
     checksum_url = nil, -- defaults to <jar-url>.sha256
@@ -195,6 +197,7 @@ Each entry stores:
 - scanner version and JAR path/mtime
 - scanner `stderr`
 - endpoints array
+- events array (publishers and subscribers)
 
 Writes are atomic (`tmp` + `fs_rename`). A corrupted or incompatible cache is
 ignored and rebuilt.
@@ -224,18 +227,42 @@ The JSON contract is versioned:
 
 ```json
 {
-  "schemaVersion": 1,
-  "scannerVersion": "1.0.0",
-  "endpoints": []
+  "schemaVersion": 2,
+  "scannerVersion": "1.1.0",
+  "endpoints": [],
+  "events": []
 }
 ```
 
-Future analyzers (`@EventListener`, scheduler, component wiring) can add fields
-without breaking this plugin.
+The plugin accepts schema versions up to 2. Scanner 1.0.0 (schema 1) still works
+for endpoints; event support requires scanner 1.1.0 or newer.
+
+## Events
+
+`:SpringAnalyzer events` shows the event graph in a Snacks tree:
+
+```text
+OrderCreatedEvent
+├─ OrderService#create
+│  ├─ OrderListener#onCreated
+│  ├─ OrderListener#afterCommit
+│  ├─ OrderListener#onCustom
+│  └─ OrderListener#onMultiple
+├─ OrderService#ship
+│  └─ ...
+└─ OrderService#createFromFactory
+   └─ ...
+```
+
+Events without a publisher or without subscribers are shown explicitly, so
+orphan listeners and unpublished events are easy to spot.
 
 ## Picker
 
-Each item contains:
+The endpoint picker shows one row per endpoint. The event picker shows a tree of
+event -> publisher -> subscriber.
+
+Endpoint items contain:
 
 - HTTP verb
 - full path
@@ -250,6 +277,11 @@ annotation. The preview shows the source file.
 - Static analysis only; it does not execute Spring.
 - Constants from external dependencies and dynamic expressions are not resolved.
 - Conditional beans and runtime context paths are not evaluated.
+- Publisher detection for `publishEvent`/`multicastEvent` can be name-only when
+  the receiver type cannot be resolved. Such publishers are marked with
+  `confidence = "name-only"`.
+- Synchronous and asynchronous listeners are listed the same; the plugin does
+  not distinguish `@Async` or transactional phases.
 - Java only; Kotlin and Groovy are not supported.
 - Full rescan per save; per-file incremental updates are planned.
 
@@ -267,7 +299,7 @@ Or set `scanner.jar` to a local build:
 
 ```lua
 scanner = {
-  jar = "/home/dsoles/Java/spring-analyzer/target/spring-analyzer-1.0.0.jar",
+  jar = "/home/dsoles/Java/spring-analyzer/target/spring-analyzer-1.1.0.jar",
 }
 ```
 
@@ -295,8 +327,7 @@ Configure `scanner.java` with a Java 21+ executable if needed.
 ## Roadmap
 
 - Stable endpoint picker and scanner download.
-- `@EventListener` publisher/subscriber picker.
-- Relationship graph between publishers and listeners.
+- Event publisher/subscriber picker. **Done in 1.2.0.**
 - Scheduled task extraction.
 - Optional Telescope adapter.
 

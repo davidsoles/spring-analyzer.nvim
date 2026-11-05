@@ -50,7 +50,7 @@ BufWritePost (*.java, pom.xml, build.gradle)
         ├── java -jar spring-analyzer.jar --format json --verbose <root>
         │
         ▼
-  JSON envelope: { schemaVersion, scannerVersion, endpoints }
+  JSON envelope: { schemaVersion, scannerVersion, endpoints, events }
         │
         ▼
   cache.write(root, data)   (tmp + atomic rename)
@@ -66,6 +66,7 @@ BufWritePost (*.java, pom.xml, build.gradle)
 | Event | Action | UI |
 |---|---|---|
 | `:SpringAnalyzer` | Show fresh cache, or show stale cache and refresh in background, or scan then show. | Yes |
+| `:SpringAnalyzer events` | Show the publisher -> subscriber tree. | Yes |
 | `:SpringAnalyzer refresh` | Cancel current scan, clear cache, full scan, show. | Yes |
 | `:SpringAnalyzer clear` | Delete current project cache. | No |
 | `:SpringAnalyzer clear all` | Delete all SpringAnalyzer caches. | No |
@@ -107,14 +108,15 @@ Schema:
   "version": 1,
   "root": "/path/to/project",
   "generated_at": 1760000000,
-  "schemaVersion": 1,
-  "scannerVersion": "1.0.0",
+  "schemaVersion": 2,
+  "scannerVersion": "1.1.0",
   "scanner": {
     "jar": "/path/to/spring-analyzer.jar",
     "jar_mtime": 1759999999
   },
   "stderr": "",
-  "endpoints": []
+  "endpoints": [],
+  "events": []
 }
 ```
 
@@ -172,7 +174,8 @@ optional Telescope adapter.
 Commands:
 
 - `:SpringAnalyzer`
-- `:SpringAnalyzer` (open picker)
+- `:SpringAnalyzer` (open endpoint picker)
+- `:SpringAnalyzer events` (publisher/subscriber tree)
 - `:SpringAnalyzer refresh`
 - `:SpringAnalyzer clear [all]`
 - `:SpringAnalyzer status`
@@ -261,6 +264,14 @@ Test cases to add:
 - `:help spring-analyzer`.
 - CI formatting and linting.
 - Release packaging.
+
+### Phase 1.5 — Events (implemented on feat/event-graph)
+
+- Extract `@EventListener`, `@TransactionalEventListener`, and composed listener
+  annotations.
+- Detect `publishEvent` / `multicastEvent` calls and resolve event types.
+- Build an event -> publisher -> subscriber tree in Snacks.
+- Treat sync and async listeners the same.
 
 ### Phase 2 — Performance
 

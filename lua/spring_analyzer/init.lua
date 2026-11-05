@@ -102,6 +102,30 @@ function M.show()
   M.refresh({ root = root, clear = false, show = true, notify = true })
 end
 
+---Show the event publisher/subscriber tree. Scans first when there is no cache.
+function M.show_events()
+  ensure_setup()
+
+  local root = util.root(0, { fallback = true })
+  if not root then
+    notify("could not find a Java/Spring project", vim.log.levels.WARN)
+    return
+  end
+
+  local data = cache.read(root, options)
+  if data then
+    picker.show_events(root, data.events or {}, options)
+    if cache.is_stale(data, options) or (data.schemaVersion or 1) < 2 then
+      notify("cache is stale or outdated; refreshing in the background...", vim.log.levels.INFO)
+      M.refresh({ root = root, clear = false, show_events = false, notify = false })
+    end
+    return
+  end
+
+  notify("scanning " .. root .. "...", vim.log.levels.INFO)
+  M.refresh({ root = root, clear = false, show_events = true, notify = true })
+end
+
 ---Run the scanner and update the cache.
 ---@param opts? { root?: string, clear?: boolean, show?: boolean, notify?: boolean }
 function M.refresh(opts)
@@ -148,6 +172,8 @@ function M.refresh(opts)
 
     if opts.show then
       picker.show(root, data.endpoints, options)
+    elseif opts.show_events then
+      picker.show_events(root, data.events or {}, options)
     end
 
     if opts.notify then
@@ -315,6 +341,7 @@ function M.status()
   local lines = {
     "root: " .. root,
     ("endpoints: %d"):format(#data.endpoints),
+    ("events: %d"):format(#(data.events or {})),
     ("cache: %s"):format(cache.path(root, options)),
     ("generated: %s (%ds ago)"):format(os.date("%Y-%m-%d %H:%M:%S", generated), age),
     ("status: %s"):format(cache.is_stale(data, options) and "stale" or "fresh"),

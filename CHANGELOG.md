@@ -18,6 +18,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - Relationship graph
 - Per-file incremental cache updates
 
+## [1.2.0] - 2026-11-04
+
+### Added
+
+- Spring event graph: events, publishers, and subscribers.
+- `:SpringAnalyzer events` shows a publisher -> subscriber tree.
+- Support for scanner JSON schema version 2.
+- Event counts in status output.
+
+### Changed
+
+- Scanner default version bumped to 1.1.0.
+- Endpoint picker now uses per-item previews so event-tree nodes can show text
+  previews when they have no source file.
+
 ## [1.1.0] - 2026-11-04
 
 ### Changed

@@ -11,6 +11,7 @@ spring.setup({
 
 assert(type(spring.show) == "function")
 assert(type(spring.refresh) == "function")
+assert(type(spring.show_events) == "function")
 assert(type(spring.install) == "function")
 assert(type(spring.doctor) == "function")
 assert(type(require("spring_analyzer.scanner").command) == "function")
