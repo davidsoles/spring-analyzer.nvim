@@ -131,6 +131,32 @@ Diagnostics:
 :SpringAnalyzer doctor
 ```
 
+## Updating
+
+There are three separate update paths:
+
+1. **Plugin code**: `:Lazy update` updates `spring-analyzer.nvim` from GitHub.
+2. **Scanner JAR**: `:SpringAnalyzer update` checks GitHub Releases, downloads
+   the latest scanner, verifies its checksum, and rescans.
+3. **Project cache**: `:SpringAnalyzer refresh` only rescans with the current
+   scanner.
+
+`update_check` controls the automatic release check:
+
+```lua
+scanner = {
+  update_check = "notify", -- false | "notify" | "auto"
+  update_check_ttl = 86400, -- seconds
+}
+```
+
+- `"notify"` shows a warning when a newer scanner exists.
+- `"auto"` downloads the newer scanner automatically.
+- `false` disables automatic checks. `:SpringAnalyzer update` still works.
+
+`:SpringAnalyzer update` changes the scanner version for the current Neovim
+session. To persist it, set `scanner.version` in your config to the new version.
+
 ## Commands
 
 | Command | Description |
@@ -142,7 +168,8 @@ Diagnostics:
 | `:SpringAnalyzer clear all` | Clear all SpringAnalyzer caches. |
 | `:SpringAnalyzer status` | Show cache path, age, and endpoint count. |
 | `:SpringAnalyzer cancel` | Cancel the current scan. |
-| `:SpringAnalyzer install` | Download/install the scanner JAR. |
+| `:SpringAnalyzer install` | Download/install the configured scanner JAR. |
+| `:SpringAnalyzer update` | Download the latest scanner release and rescan. |
 | `:SpringAnalyzer doctor` | Show Java, JAR, cache, and root diagnostics. |
 | `:SpringAnalyzer help` | Show command help. |
 
@@ -157,6 +184,8 @@ require("spring_analyzer").setup({
     jar = nil,         -- explicit JAR; wins over auto-download
     version = "1.1.0", -- scanner release to download
     auto_download = true,
+    update_check = "notify", -- false | "notify" | "auto"
+    update_check_ttl = 86400,
     download_url = "https://github.com/davidsoles/spring-analyzer/releases/download/v%s/spring-analyzer-%s.jar",
     checksum_url = nil, -- defaults to <jar-url>.sha256
     checksum = nil,     -- optional expected SHA-256
@@ -328,6 +357,7 @@ Configure `scanner.java` with a Java 21+ executable if needed.
 
 - Stable endpoint picker and scanner download.
 - Event publisher/subscriber picker. **Done in 1.2.0.**
+- Scanner update checks and `:SpringAnalyzer update`. **Done in 1.3.0.**
 - Scheduled task extraction.
 - Optional Telescope adapter.
 

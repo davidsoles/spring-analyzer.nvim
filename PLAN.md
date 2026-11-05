@@ -72,7 +72,8 @@ BufWritePost (*.java, pom.xml, build.gradle)
 | `:SpringAnalyzer clear all` | Delete all SpringAnalyzer caches. | No |
 | `:SpringAnalyzer status` | Show root, endpoint count, cache path, age, staleness. | No |
 | `:SpringAnalyzer cancel` | Cancel the running scan. | No |
-| `:SpringAnalyzer install` | Download/install the scanner JAR. | No |
+| `:SpringAnalyzer install` | Download/install the configured scanner JAR. | No |
+| `:SpringAnalyzer update` | Check GitHub Releases, download the latest scanner, and rescan. | No |
 | `:SpringAnalyzer doctor` | Show Java, JAR, cache, and root diagnostics. | No |
 | `BufWritePost *.java` | Debounced silent full scan; update cache. | No |
 | `BufWritePost pom.xml` / Gradle | Same as above. | No |
@@ -181,6 +182,7 @@ Commands:
 - `:SpringAnalyzer status`
 - `:SpringAnalyzer cancel`
 - `:SpringAnalyzer install`
+- `:SpringAnalyzer update`
 - `:SpringAnalyzer doctor`
 - `:SpringAnalyzer help`
 
@@ -264,6 +266,14 @@ Test cases to add:
 - `:help spring-analyzer`.
 - CI formatting and linting.
 - Release packaging.
+
+### Phase 1.4 — Scanner updates (implemented on feat/event-graph)
+
+- Check GitHub Releases at most once per day (configurable TTL).
+- Notify when a newer scanner exists.
+- `:SpringAnalyzer update` downloads the latest release, verifies SHA-256, and
+  rescans.
+- `update_check = "auto"` is opt-in; `"notify"` is the default.
 
 ### Phase 1.5 — Events (implemented on feat/event-graph)
 
