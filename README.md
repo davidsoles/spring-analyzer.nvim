@@ -39,8 +39,6 @@ application.
 
 ### With lazy.nvim / LazyVim
 
-After the repository is published:
-
 ```lua
 return {
   {

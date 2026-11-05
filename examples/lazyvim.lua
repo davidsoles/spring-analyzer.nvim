@@ -1,9 +1,12 @@
 -- Example LazyVim specification.
 -- Copy this file to ~/.config/nvim/lua/plugins/spring-analyzer.lua
+--
+-- For local development, replace the GitHub URL with:
+--   dir = "/home/dsoles/Neovim/spring-analyzer.nvim",
+--   name = "spring-analyzer.nvim",
 return {
   {
-    dir = "/home/dsoles/Neovim/spring-analyzer.nvim",
-    name = "spring-analyzer.nvim",
+    "davidsoles/spring-analyzer.nvim",
     ft = "java",
     cmd = {
       "SpringAnalyzer",
