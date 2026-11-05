@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-SCANNER_DIR="${1:-/home/dsoles/Java/spring-boot-parser}"
+SCANNER_DIR="${1:-/home/dsoles/Java/spring-analyzer}"
 PLUGIN_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 echo "Building SpringAnalyzer in $SCANNER_DIR..."

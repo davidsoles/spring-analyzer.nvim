@@ -92,7 +92,7 @@ Use a directory spec while developing both projects:
   opts = {
     scanner = {
       -- Local JAR wins over auto-download.
-      jar = "/home/dsoles/Java/spring-boot-parser/target/spring-analyzer-1.0.0.jar",
+      jar = "/home/dsoles/Java/spring-analyzer/target/spring-analyzer-1.0.0.jar",
     },
     auto = { on_save = false, on_open = false },
   },
@@ -274,7 +274,7 @@ Or set `scanner.jar` to a local build:
 
 ```lua
 scanner = {
-  jar = "/home/dsoles/Java/spring-boot-parser/target/spring-analyzer-1.0.0.jar",
+  jar = "/home/dsoles/Java/spring-analyzer/target/spring-analyzer-1.0.0.jar",
 }
 ```
 
