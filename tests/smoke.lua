@@ -19,8 +19,6 @@ assert(type(require("spring_analyzer.downloader").ensure) == "function")
 
 vim.cmd("runtime plugin/spring-analyzer.lua")
 assert(vim.fn.exists(":SpringAnalyzer") == 2)
-assert(vim.fn.exists(":SpringAnalyzerRefresh") == 2)
-assert(vim.fn.exists(":SpringAnalyzerInstall") == 2)
-assert(vim.fn.exists(":SpringAnalyzerDoctor") == 2)
+assert(vim.fn.exists(":SpringEndpoints") == 0)
 
 print("spring-analyzer.nvim smoke test: ok")

@@ -13,6 +13,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - Relationship graph
 - Per-file incremental cache updates
 
+## [1.1.0] - 2026-11-04
+
+### Changed
+
+- Consolidated all user commands into a single `:SpringAnalyzer` command with
+  subcommands: `refresh`, `clear [all]`, `status`, `cancel`, `install`,
+  `doctor`, and `help`.
+- Removed the many `:SpringAnalyzer*` and `:SpringEndpoints*` commands.
+
 ## [1.0.0] - 2026-11-04
 
 ### Added

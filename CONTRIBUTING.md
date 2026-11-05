@@ -48,7 +48,7 @@ Open an issue with:
 - Neovim version (`nvim --version`)
 - Java version (`java -version`)
 - Plugin and scanner versions
-- `:SpringAnalyzerDoctor` output
+- `:SpringAnalyzer doctor` output
 - Command used and actual/expected behavior
 
 For security issues, follow [SECURITY.md](SECURITY.md).

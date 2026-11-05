@@ -8,24 +8,11 @@ return {
   {
     "davidsoles/spring-analyzer.nvim",
     ft = "java",
-    cmd = {
-      "SpringAnalyzer",
-      "SpringAnalyzerRefresh",
-      "SpringAnalyzerClear",
-      "SpringAnalyzerStatus",
-      "SpringAnalyzerCancel",
-      "SpringAnalyzerInstall",
-      "SpringAnalyzerDoctor",
-      "SpringEndpoints",
-      "SpringEndpointsRefresh",
-      "SpringEndpointsClear",
-      "SpringEndpointsStatus",
-      "SpringEndpointsCancel",
-    },
+    cmd = { "SpringAnalyzer" },
     keys = {
       { "<leader>sa", "<cmd>SpringAnalyzer<cr>", desc = "SpringAnalyzer: endpoints" },
-      { "<leader>sr", "<cmd>SpringAnalyzerRefresh<cr>", desc = "SpringAnalyzer: refresh" },
-      { "<leader>sd", "<cmd>SpringAnalyzerDoctor<cr>", desc = "SpringAnalyzer: diagnostics" },
+      { "<leader>sr", "<cmd>SpringAnalyzer refresh<cr>", desc = "SpringAnalyzer: refresh" },
+      { "<leader>sd", "<cmd>SpringAnalyzer doctor<cr>", desc = "SpringAnalyzer: diagnostics" },
     },
     dependencies = {
       "folke/snacks.nvim",

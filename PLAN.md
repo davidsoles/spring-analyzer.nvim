@@ -27,7 +27,7 @@ the `spring-analyzer` CLI.
 | Cache | JSON in `stdpath("cache")` | Does not dirty the repository; survives restarts. |
 | UI | `Snacks.picker.pick({ items = ... })` | Native LazyVim/Snacks integration. |
 | Concurrency | One scan at a time, callback queue | Avoids races and partial writes. |
-| Invalidation | `Clear`, `Clear!`, `Refresh` | Explicit user control. |
+| Invalidation | `clear`, `clear all`, `refresh` | Explicit user control. |
 | Scanner distribution | GitHub Release + SHA-256 | Simple to install, verifiable. |
 
 ## 3. Flow
@@ -66,13 +66,13 @@ BufWritePost (*.java, pom.xml, build.gradle)
 | Event | Action | UI |
 |---|---|---|
 | `:SpringAnalyzer` | Show fresh cache, or show stale cache and refresh in background, or scan then show. | Yes |
-| `:SpringAnalyzerRefresh` | Cancel current scan, clear cache, full scan, show. | Yes |
-| `:SpringAnalyzerClear` | Delete current project cache. | No |
-| `:SpringAnalyzerClear!` | Delete all SpringAnalyzer caches. | No |
-| `:SpringAnalyzerStatus` | Show root, endpoint count, cache path, age, staleness. | No |
-| `:SpringAnalyzerCancel` | Cancel the running scan. | No |
-| `:SpringAnalyzerInstall` | Download/install the scanner JAR. | No |
-| `:SpringAnalyzerDoctor` | Show Java, JAR, cache, and root diagnostics. | No |
+| `:SpringAnalyzer refresh` | Cancel current scan, clear cache, full scan, show. | Yes |
+| `:SpringAnalyzer clear` | Delete current project cache. | No |
+| `:SpringAnalyzer clear all` | Delete all SpringAnalyzer caches. | No |
+| `:SpringAnalyzer status` | Show root, endpoint count, cache path, age, staleness. | No |
+| `:SpringAnalyzer cancel` | Cancel the running scan. | No |
+| `:SpringAnalyzer install` | Download/install the scanner JAR. | No |
+| `:SpringAnalyzer doctor` | Show Java, JAR, cache, and root diagnostics. | No |
 | `BufWritePost *.java` | Debounced silent full scan; update cache. | No |
 | `BufWritePost pom.xml` / Gradle | Same as above. | No |
 | `BufEnter` / `VimEnter` `*.java` | Read cache; refresh silently if missing or stale. | No |
@@ -172,13 +172,14 @@ optional Telescope adapter.
 Commands:
 
 - `:SpringAnalyzer`
-- `:SpringAnalyzerRefresh`
-- `:SpringAnalyzerClear[!]`
-- `:SpringAnalyzerStatus`
-- `:SpringAnalyzerCancel`
-- `:SpringAnalyzerInstall`
-- `:SpringAnalyzerDoctor`
-- `:SpringEndpoints*` aliases
+- `:SpringAnalyzer` (open picker)
+- `:SpringAnalyzer refresh`
+- `:SpringAnalyzer clear [all]`
+- `:SpringAnalyzer status`
+- `:SpringAnalyzer cancel`
+- `:SpringAnalyzer install`
+- `:SpringAnalyzer doctor`
+- `:SpringAnalyzer help`
 
 API:
 

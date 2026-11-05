@@ -44,19 +44,11 @@ return {
   {
     "davidsoles/spring-analyzer.nvim",
     ft = "java",
-    cmd = {
-      "SpringAnalyzer",
-      "SpringAnalyzerRefresh",
-      "SpringAnalyzerClear",
-      "SpringAnalyzerStatus",
-      "SpringAnalyzerCancel",
-      "SpringAnalyzerInstall",
-      "SpringAnalyzerDoctor",
-    },
+    cmd = { "SpringAnalyzer" },
     keys = {
       { "<leader>sa", "<cmd>SpringAnalyzer<cr>", desc = "SpringAnalyzer: endpoints" },
-      { "<leader>sr", "<cmd>SpringAnalyzerRefresh<cr>", desc = "SpringAnalyzer: refresh" },
-      { "<leader>sd", "<cmd>SpringAnalyzerDoctor<cr>", desc = "SpringAnalyzer: diagnostics" },
+      { "<leader>sr", "<cmd>SpringAnalyzer refresh<cr>", desc = "SpringAnalyzer: refresh" },
+      { "<leader>sd", "<cmd>SpringAnalyzer doctor<cr>", desc = "SpringAnalyzer: diagnostics" },
     },
     dependencies = { "folke/snacks.nvim" },
     opts = {
@@ -129,13 +121,13 @@ downloaded to a temporary file, verified, and moved into place atomically.
 Manual installation:
 
 ```vim
-:SpringAnalyzerInstall
+:SpringAnalyzer install
 ```
 
 Diagnostics:
 
 ```vim
-:SpringAnalyzerDoctor
+:SpringAnalyzer doctor
 ```
 
 ## Commands
@@ -143,15 +135,16 @@ Diagnostics:
 | Command | Description |
 |---|---|
 | `:SpringAnalyzer` | Open the endpoint picker. |
-| `:SpringAnalyzerRefresh` | Clear the cache and rescan. |
-| `:SpringAnalyzerClear` | Clear the current project cache. |
-| `:SpringAnalyzerClear!` | Clear all SpringAnalyzer caches. |
-| `:SpringAnalyzerStatus` | Show cache path, age, and endpoint count. |
-| `:SpringAnalyzerCancel` | Cancel the current scan. |
-| `:SpringAnalyzerInstall` | Download/install the scanner JAR. |
-| `:SpringAnalyzerDoctor` | Show Java, JAR, cache, and root diagnostics. |
+| `:SpringAnalyzer refresh` | Clear the cache and rescan. |
+| `:SpringAnalyzer clear` | Clear the current project cache. |
+| `:SpringAnalyzer clear all` | Clear all SpringAnalyzer caches. |
+| `:SpringAnalyzer status` | Show cache path, age, and endpoint count. |
+| `:SpringAnalyzer cancel` | Cancel the current scan. |
+| `:SpringAnalyzer install` | Download/install the scanner JAR. |
+| `:SpringAnalyzer doctor` | Show Java, JAR, cache, and root diagnostics. |
+| `:SpringAnalyzer help` | Show command help. |
 
-The `:SpringEndpoints*` commands are kept as aliases.
+There is only one command; use its subcommands.
 
 ## Configuration
 
@@ -267,7 +260,7 @@ annotation. The preview shows the source file.
 Run:
 
 ```vim
-:SpringAnalyzerInstall
+:SpringAnalyzer install
 ```
 
 Or set `scanner.jar` to a local build:
@@ -287,7 +280,7 @@ Install `curl`, or configure a local JAR and disable auto-download.
 Run:
 
 ```vim
-:SpringAnalyzerDoctor
+:SpringAnalyzer doctor
 ```
 
 Configure `scanner.java` with a Java 21+ executable if needed.
@@ -295,9 +288,9 @@ Configure `scanner.java` with a Java 21+ executable if needed.
 ### Nothing appears
 
 - Check that the current file is inside a Git or Maven/Gradle project.
-- Run `:SpringAnalyzerStatus`.
-- Run `:SpringAnalyzerDoctor`.
-- Run `:SpringAnalyzerRefresh`.
+- Run `:SpringAnalyzer status`.
+- Run `:SpringAnalyzer doctor`.
+- Run `:SpringAnalyzer refresh`.
 
 ## Roadmap
 

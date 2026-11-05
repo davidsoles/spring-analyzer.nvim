@@ -7,84 +7,110 @@ local function spring()
   return require("spring_analyzer")
 end
 
-vim.api.nvim_create_user_command("SpringAnalyzer", function()
-  spring().show()
-end, {
-  desc = "spring-analyzer: list REST endpoints",
-})
+local function print_help()
+  vim.notify(
+    table.concat({
+      "SpringAnalyzer",
+      "",
+      ":SpringAnalyzer                 Open the endpoint picker",
+      ":SpringAnalyzer refresh         Clear cache and rescan",
+      ":SpringAnalyzer clear           Clear the current project cache",
+      ":SpringAnalyzer clear all       Clear all caches",
+      ":SpringAnalyzer status          Show cache status",
+      ":SpringAnalyzer cancel          Cancel the current scan",
+      ":SpringAnalyzer install         Download/install the scanner JAR",
+      ":SpringAnalyzer doctor          Show diagnostics",
+      ":SpringAnalyzer help            Show this help",
+    }, "\n"),
+    vim.log.levels.INFO
+  )
+end
 
-vim.api.nvim_create_user_command("SpringEndpoints", function()
-  spring().show()
-end, {
-  desc = "spring-analyzer: list REST endpoints (alias)",
-})
+local subcommands = {
+  refresh = {
+    desc = "Clear cache and rescan",
+    run = function()
+      spring().refresh({ clear = true, show = true, notify = true })
+    end,
+  },
+  clear = {
+    desc = "Clear cache",
+    run = function(args)
+      if args[2] == "all" then
+        spring().clear_all()
+      else
+        spring().clear()
+      end
+    end,
+  },
+  status = {
+    desc = "Show cache status",
+    run = function()
+      spring().status()
+    end,
+  },
+  cancel = {
+    desc = "Cancel the current scan",
+    run = function()
+      spring().cancel()
+    end,
+  },
+  install = {
+    desc = "Download and install the scanner JAR",
+    run = function()
+      spring().install()
+    end,
+  },
+  doctor = {
+    desc = "Show scanner and cache diagnostics",
+    run = function()
+      spring().doctor()
+    end,
+  },
+  help = {
+    desc = "Show help",
+    run = print_help,
+  },
+}
 
-vim.api.nvim_create_user_command("SpringAnalyzerRefresh", function()
-  spring().refresh({ clear = true, show = true, notify = true })
-end, {
-  desc = "spring-analyzer: clear cache and rescan",
-})
-
-vim.api.nvim_create_user_command("SpringEndpointsRefresh", function()
-  spring().refresh({ clear = true, show = true, notify = true })
-end, {
-  desc = "spring-analyzer: clear cache and rescan (alias)",
-})
-
-vim.api.nvim_create_user_command("SpringAnalyzerClear", function(args)
-  if args.bang then
-    spring().clear_all()
-  else
-    spring().clear()
+local function complete(arglead, cmdline)
+  local parts = vim.split(cmdline, "%s+", { trimempty = true })
+  if parts[2] == "clear" then
+    if vim.startswith("all", arglead) then
+      return { "all" }
+    end
+    return {}
   end
-end, {
-  bang = true,
-  desc = "spring-analyzer: clear cache (bang for all)",
-})
 
-vim.api.nvim_create_user_command("SpringEndpointsClear", function(args)
-  if args.bang then
-    spring().clear_all()
-  else
-    spring().clear()
+  local matches = {}
+  for name in pairs(subcommands) do
+    if vim.startswith(name, arglead) then
+      table.insert(matches, name)
+    end
   end
-end, {
-  bang = true,
-  desc = "spring-analyzer: clear cache (alias)",
-})
+  table.sort(matches)
+  return matches
+end
 
-vim.api.nvim_create_user_command("SpringAnalyzerStatus", function()
-  spring().status()
-end, {
-  desc = "spring-analyzer: show cache status",
-})
+vim.api.nvim_create_user_command("SpringAnalyzer", function(opts)
+  local args = opts.fargs
+  local subcommand = args[1]
 
-vim.api.nvim_create_user_command("SpringEndpointsStatus", function()
-  spring().status()
-end, {
-  desc = "spring-analyzer: show cache status (alias)",
-})
+  if not subcommand then
+    spring().show()
+    return
+  end
 
-vim.api.nvim_create_user_command("SpringAnalyzerCancel", function()
-  spring().cancel()
-end, {
-  desc = "spring-analyzer: cancel the current scan",
-})
+  local entry = subcommands[subcommand]
+  if not entry then
+    vim.notify("spring-analyzer: unknown subcommand: " .. subcommand, vim.log.levels.ERROR)
+    print_help()
+    return
+  end
 
-vim.api.nvim_create_user_command("SpringEndpointsCancel", function()
-  spring().cancel()
+  entry.run(args)
 end, {
-  desc = "spring-analyzer: cancel the current scan (alias)",
-})
-
-vim.api.nvim_create_user_command("SpringAnalyzerInstall", function()
-  spring().install()
-end, {
-  desc = "spring-analyzer: download and install the scanner JAR",
-})
-
-vim.api.nvim_create_user_command("SpringAnalyzerDoctor", function()
-  spring().doctor()
-end, {
-  desc = "spring-analyzer: show scanner and cache diagnostics",
+  nargs = "*",
+  desc = "SpringAnalyzer: endpoints and diagnostics",
+  complete = complete,
 })

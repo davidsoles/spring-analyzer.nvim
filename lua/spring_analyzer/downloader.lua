@@ -291,7 +291,7 @@ function M.ensure(cfg, callback)
   end
 
   if cfg.scanner.auto_download == false then
-    schedule(callback, "Scanner JAR not found. Run :SpringAnalyzerInstall or configure scanner.jar")
+    schedule(callback, "Scanner JAR not found. Run :SpringAnalyzer install or configure scanner.jar")
     return
   end
 
