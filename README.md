@@ -48,11 +48,11 @@ return {
     cmd = { "SpringAnalyzer" },
     keys = {
       { "<leader>ce", "<cmd>SpringAnalyzer<cr>", desc = "SpringAnalyzer: endpoints" },
-      { "<leader>cE", "<cmd>SpringAnalyzer events<cr>", desc = "SpringAnalyzer: events" },
+      { "<leader>cw", "<cmd>SpringAnalyzer events<cr>", desc = "SpringAnalyzer: events" },
       { "<leader>c<C-r>", "<cmd>SpringAnalyzer refresh<cr>", desc = "SpringAnalyzer: refresh" },
-      { "<leader>cH", "<cmd>SpringAnalyzer doctor<cr>", desc = "SpringAnalyzer: diagnostics" },
+      { "<leader>ci", "<cmd>SpringAnalyzer doctor<cr>", desc = "SpringAnalyzer: diagnostics" },
     },
-    -- ce = endpoints, cE = events, c<C-r> = refresh, cH = diagnostics.
+    -- ce = endpoints, cw = events/wiring, c<C-r> = refresh, ci = diagnostics.
     -- These avoid LazyVim's ca, cc, cd, cf, cm, co, cr, cs, and cS.
     dependencies = { "folke/snacks.nvim" },
     opts = {
