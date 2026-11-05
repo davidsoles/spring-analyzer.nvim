@@ -5,10 +5,13 @@ local cache = require("spring_analyzer.cache")
 local scanner = require("spring_analyzer.scanner")
 local downloader = require("spring_analyzer.downloader")
 local picker = require("spring_analyzer.picker")
+local updater = require("spring_analyzer.updater")
 local util = require("spring_analyzer.util")
 
 local options
 local pending_refresh = {}
+local notified_update_version = nil
+local updating = false
 
 local function ensure_setup()
   if not options then
@@ -78,6 +81,103 @@ function M.setup(opts)
   return M
 end
 
+---Check GitHub Releases for a newer scanner, using the plugin cache TTL.
+function M.check_updates()
+  ensure_setup()
+
+  if options.scanner.update_check == false then
+    return
+  end
+  if options.scanner.jar and options.scanner.jar ~= "" then
+    return
+  end
+
+  local current = tostring(options.scanner.version or "0.0.0")
+  updater.fetch(options, function(err, info)
+    if err or not info then
+      return
+    end
+    if not updater.is_newer(info.version, current) then
+      return
+    end
+    if options.scanner.update_check == "auto" then
+      M.update({ latest = info })
+      return
+    end
+    if notified_update_version == info.version then
+      return
+    end
+
+    notified_update_version = info.version
+    notify(
+      ("scanner v%s is available (current v%s); run :SpringAnalyzer update"):format(
+        info.version,
+        current
+      ),
+      vim.log.levels.WARN
+    )
+  end)
+end
+
+---Download the latest scanner release and rescan.
+---@param opts? { latest?: table }
+function M.update(opts)
+  opts = opts or {}
+  ensure_setup()
+
+  if updating then
+    notify("a scanner update is already in progress", vim.log.levels.INFO)
+    return
+  end
+  if options.scanner.jar and options.scanner.jar ~= "" then
+    notify("scanner.jar is configured explicitly; update it manually", vim.log.levels.WARN)
+    return
+  end
+
+  local function apply(info)
+    local current = tostring(options.scanner.version or "0.0.0")
+    if not updater.is_newer(info.version, current) then
+      notify(("scanner is already up to date (v%s)"):format(current), vim.log.levels.INFO)
+      return
+    end
+
+    updating = true
+    local previous = options.scanner.version
+    options.scanner.version = info.version
+    notify("downloading scanner v" .. info.version .. "...", vim.log.levels.INFO)
+
+    downloader.install(options, function(err, path)
+      updating = false
+      if err then
+        options.scanner.version = previous
+        notify("scanner update failed: " .. err, vim.log.levels.ERROR)
+        return
+      end
+
+      notified_update_version = info.version
+      notify(("scanner v%s installed at %s"):format(info.version, path), vim.log.levels.INFO)
+      notify(
+        ("set scanner.version = \"%s\" in your config to keep it after restart"):format(info.version),
+        vim.log.levels.WARN
+      )
+      M.refresh({ clear = true, show = false, notify = false })
+    end, true)
+  end
+
+  if opts.latest then
+    apply(opts.latest)
+    return
+  end
+
+  updater.fetch(options, function(err, info)
+    if err then
+      notify("could not check for scanner updates: " .. err, vim.log.levels.ERROR)
+      return
+    end
+    apply(info)
+  end, true)
+end
+
 ---Show the endpoint picker. Scans first when there is no cache.
 function M.show()
   ensure_setup()
@@ -87,6 +187,8 @@ function M.show()
     notify("could not find a Java/Spring project", vim.log.levels.WARN)
     return
   end
+
+  M.check_updates()
 
   local data = cache.read(root, options)
   if data then
@@ -100,6 +202,32 @@ function M.show()
 
   notify("scanning " .. root .. "...", vim.log.levels.INFO)
   M.refresh({ root = root, clear = false, show = true, notify = true })
+end
+
+---Show the event publisher/subscriber tree. Scans first when there is no cache.
+function M.show_events()
+  ensure_setup()
+
+  local root = util.root(0, { fallback = true })
+  if not root then
+    notify("could not find a Java/Spring project", vim.log.levels.WARN)
+    return
+  end
+
+  M.check_updates()
+
+  local data = cache.read(root, options)
+  if data then
+    picker.show_events(root, data.events or {}, options)
+    if cache.is_stale(data, options) or (data.schemaVersion or 1) < 2 then
+      notify("cache is stale or outdated; refreshing in the background...", vim.log.levels.INFO)
+      M.refresh({ root = root, clear = false, show_events = false, notify = false })
+    end
+    return
+  end
+
+  notify("scanning " .. root .. "...", vim.log.levels.INFO)
+  M.refresh({ root = root, clear = false, show_events = true, notify = true })
 end
 
 ---Run the scanner and update the cache.
@@ -148,6 +276,8 @@ function M.refresh(opts)
 
     if opts.show then
       picker.show(root, data.endpoints, options)
+    elseif opts.show_events then
+      picker.show_events(root, data.events or {}, options)
     end
 
     if opts.notify then
@@ -315,6 +445,7 @@ function M.status()
   local lines = {
     "root: " .. root,
     ("endpoints: %d"):format(#data.endpoints),
+    ("events: %d"):format(#(data.events or {})),
     ("cache: %s"):format(cache.path(root, options)),
     ("generated: %s (%ds ago)"):format(os.date("%Y-%m-%d %H:%M:%S", generated), age),
     ("status: %s"):format(cache.is_stale(data, options) and "stale" or "fresh"),

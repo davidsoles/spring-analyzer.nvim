@@ -3,7 +3,7 @@ local M = {}
 local uv = vim.uv or vim.loop
 local downloader = require("spring_analyzer.downloader")
 
-local SCHEMA_VERSION = 1
+local SCHEMA_VERSION = 2
 
 local state = {
   scanning = false,
@@ -70,7 +70,7 @@ function M.scan(root, cfg, callback)
   state.root = root
   state.queue = {}
 
-  local function finish(failure, endpoints, stderr, jar, scanner_version)
+  local function finish(failure, endpoints, events, stderr, jar, scanner_version)
     if generation ~= state.generation then
       return
     end
@@ -89,6 +89,7 @@ function M.scan(root, cfg, callback)
         schemaVersion = SCHEMA_VERSION,
         scannerVersion = scanner_version,
         endpoints = endpoints,
+        events = events or {},
         stderr = stderr or "",
         scanner = {
           jar = jar,
@@ -151,7 +152,12 @@ function M.scan(root, cfg, callback)
           end
         end
 
-        finish(nil, endpoints, result.stderr, jar, decoded.scannerVersion)
+        local events = decoded.events
+        if type(events) ~= "table" then
+          events = {}
+        end
+
+        finish(nil, endpoints, events, result.stderr, jar, decoded.scannerVersion)
       end)
     end
 

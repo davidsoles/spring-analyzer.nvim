@@ -13,12 +13,14 @@ local function print_help()
       "SpringAnalyzer",
       "",
       ":SpringAnalyzer                 Open the endpoint picker",
+      ":SpringAnalyzer events          Show publishers and subscribers",
       ":SpringAnalyzer refresh         Clear cache and rescan",
       ":SpringAnalyzer clear           Clear the current project cache",
       ":SpringAnalyzer clear all       Clear all caches",
       ":SpringAnalyzer status          Show cache status",
       ":SpringAnalyzer cancel          Cancel the current scan",
-      ":SpringAnalyzer install         Download/install the scanner JAR",
+      ":SpringAnalyzer install         Download/install the configured scanner JAR",
+      ":SpringAnalyzer update          Download the latest scanner release",
       ":SpringAnalyzer doctor          Show diagnostics",
       ":SpringAnalyzer help            Show this help",
     }, "\n"),
@@ -27,6 +29,12 @@ local function print_help()
 end
 
 local subcommands = {
+  events = {
+    desc = "Show publishers and subscribers",
+    run = function()
+      spring().show_events()
+    end,
+  },
   refresh = {
     desc = "Clear cache and rescan",
     run = function()
@@ -56,9 +64,15 @@ local subcommands = {
     end,
   },
   install = {
-    desc = "Download and install the scanner JAR",
+    desc = "Download and install the configured scanner JAR",
     run = function()
       spring().install()
+    end,
+  },
+  update = {
+    desc = "Download the latest scanner release",
+    run = function()
+      spring().update()
     end,
   },
   doctor = {

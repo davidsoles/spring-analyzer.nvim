@@ -11,6 +11,8 @@ local M = {}
 ---@field jar? string explicit JAR path; wins over auto-download
 ---@field version? string scanner version to download
 ---@field auto_download? boolean
+---@field update_check? "notify"|"auto"|false
+---@field update_check_ttl? number seconds between GitHub release checks
 ---@field download_url? string URL template with two %s placeholders: version, version
 ---@field checksum_url? string optional checksum URL; defaults to <jar-url>.sha256
 ---@field checksum? string optional expected SHA-256
@@ -35,8 +37,10 @@ M.defaults = {
   scanner = {
     java = nil,
     jar = nil,
-    version = "1.0.0",
+    version = "1.1.0",
     auto_download = true,
+    update_check = "notify",
+    update_check_ttl = 86400,
     download_url = "https://github.com/davidsoles/spring-analyzer/releases/download/v%s/spring-analyzer-%s.jar",
     checksum_url = nil,
     checksum = nil,
@@ -82,6 +86,14 @@ function M.setup(opts)
   end
 
   cfg.scanner.version = tostring(cfg.scanner.version or "1.0.0")
+  if cfg.scanner.update_check == true then
+    cfg.scanner.update_check = "notify"
+  elseif cfg.scanner.update_check ~= false
+      and cfg.scanner.update_check ~= "notify"
+      and cfg.scanner.update_check ~= "auto" then
+    cfg.scanner.update_check = "notify"
+  end
+  cfg.scanner.update_check_ttl = tonumber(cfg.scanner.update_check_ttl) or 86400
 
   return cfg
 end
